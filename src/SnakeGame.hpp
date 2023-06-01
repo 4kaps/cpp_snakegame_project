@@ -12,27 +12,42 @@
 class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 이용해 값을 입출력한다.
     Board board;
     bool game_over;
-    Item* item;
+    Growth* growth;
+    Poison* poison;
     Snake snake;
 
     Scoreboard scoreboard;
     int score;
 
     void handleNextPiece(SnakePiece next) {
-        if (item != NULL) {
+        if (growth != NULL) {
             switch (board.getCharAt(next.getY(), next.getX())) 
             {
+            int emptyRow, emptyCol;
+
             case '+':
-                eatItem();
+                eatGrowth();
+                break;
+            case '-':
+                eatPoison();
+                emptyRow = snake.tail().getY();
+                emptyCol = snake.tail().getX();
+                board.add(Empty(emptyRow, emptyCol));
+                snake.removePiece();
+                emptyRow = snake.tail().getY();
+                emptyCol = snake.tail().getX();
+                board.add(Empty(emptyRow, emptyCol));
+                snake.removePiece();
                 break;
             case ' ': 
             {
-                int emptyRow = snake.tail().getY();
-                int emptyCol = snake.tail().getX();
+                emptyRow = snake.tail().getY();
+                emptyCol = snake.tail().getX();
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
                 break;
             }
+            
             default:
                 game_over = true;
                 break;
@@ -43,17 +58,31 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
         snake.addPiece(next);
     }
 
-    void createItem() {
+    void createGrowth() {
         int y, x;
         board.getEmptyCoordinates(y, x);
-        item = new Item(y, x);
-        board.add(*item);
+        growth = new Growth(y, x);
+        board.add(*growth);
     }
 
-    void eatItem() {
-        delete item;
-        item = NULL;
+    void createPoison() {
+        int y, x;
+        board.getEmptyCoordinates(y, x);
+        poison = new Poison(y, x);
+        board.add(*poison);
+    }
+
+    void eatGrowth() {
+        delete growth;
+        growth = NULL;
         score += 100;
+        scoreboard.updateScore(score);
+    }
+
+    void eatPoison() {
+        delete poison;
+        poison = NULL;
+        score += 50;
         scoreboard.updateScore(score);
     }
 
@@ -67,11 +96,12 @@ public:
     }
 
     ~SnakeGame() {
-        delete item;
+        delete growth;
     }
 
     void initialize() {
-        item = NULL;
+        growth = NULL;
+        poison = NULL;
         board.initialize();
         score = 0;
         scoreboard.initialize(score);
@@ -85,8 +115,12 @@ public:
         snake.setDirection(right);
         handleNextPiece(snake.nextHead());
 
-        if (item == NULL) {
-            createItem();
+        if (poison == NULL) {
+            createPoison();
+        }
+
+        if (growth == NULL) {
+            createGrowth();
         }
     }
 
@@ -123,8 +157,12 @@ public:
     void updateState() {
         handleNextPiece(snake.nextHead());
         
-        if (item == NULL) {
-            createItem();
+        if (growth == NULL) {
+            createGrowth();
+        }
+
+        if (poison == NULL) {
+            createPoison();
         }
     }
 
