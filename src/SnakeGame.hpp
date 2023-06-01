@@ -2,7 +2,8 @@
 #include <ncurses.h>
 #include <time.h>
 #include <stdlib.h>
-#include "Item.hpp"
+#include "Apple.hpp"
+#include "Poison.hpp"
 #include "Empty.hpp"
 #include "Board.hpp"
 #include "Drawable.hpp"
@@ -12,19 +13,27 @@
 class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 이용해 값을 입출력한다.
     Board board;
     bool game_over;
-    Item* item;
+    Apple* apple;
     Snake snake;
+    Poison* poison;
 
     Scoreboard scoreboard;
     int score;
 
     void handleNextPiece(SnakePiece next) {
-        if (item != NULL) {
-            switch (board.getCharAt(next.getY(), next.getX())) 
+        if (apple != NULL) {
+            switch (board.getCharAt(next.getY(), next.getX()));
             {
             case '+':
-                eatItem();
+            {
+                eatApple();
                 break;
+            }
+            case '-':
+            {
+                eatPoison();
+                break;
+            }
             case ' ': 
             {
                 int emptyRow = snake.tail().getY();
@@ -43,19 +52,23 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
         snake.addPiece(next);
     }
 
-    void createItem() {
+    void createApple() {
         int y, x;
         board.getEmptyCoordinates(y, x);
-        item = new Item(y, x);
-        board.add(*item);
+        apple = new Apple(y, x);
+        board.add(*apple);
+    }
+    
+    void createPoison() {
     }
 
-    void eatItem() {
-        delete item;
-        item = NULL;
+    void eatApple() {
+        delete apple;
+        apple = NULL;
         score += 100;
         scoreboard.updateScore(score);
     }
+    
 
 public:
     SnakeGame(int height, int width, int speed = 300) {
@@ -67,11 +80,13 @@ public:
     }
 
     ~SnakeGame() {
-        delete item;
+        delete apple;
+        delete poison;
     }
 
     void initialize() {
-        item = NULL;
+        apple = NULL;
+        posion = NULL;
         board.initialize();
         score = 0;
         scoreboard.initialize(score);
