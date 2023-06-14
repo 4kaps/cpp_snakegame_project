@@ -14,6 +14,7 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
     bool game_over;
     Growth* growth;
     Poison* poison;
+    Special* special;
     Snake snake;
 
     Scoreboard scoreboard;
@@ -34,6 +35,13 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
                 emptyCol = snake.tail().getX();
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
+                emptyRow = snake.tail().getY();
+                emptyCol = snake.tail().getX();
+                board.add(Empty(emptyRow, emptyCol));
+                snake.removePiece();
+                break;
+            case '?':
+                eatSpecial();
                 emptyRow = snake.tail().getY();
                 emptyCol = snake.tail().getX();
                 board.add(Empty(emptyRow, emptyCol));
@@ -72,6 +80,13 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
         board.add(*poison);
     }
 
+    void createSpecial(){
+        int y, x;
+        board.getEmptyCoordinates(y, x);
+        special = new Special(y, x);
+        board.add(*special);
+    }
+
     void eatGrowth() {
         delete growth;
         growth = NULL;
@@ -83,6 +98,14 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
         delete poison;
         poison = NULL;
         score += 50;
+        scoreboard.updateScore(score);
+    }
+
+    void eatSpecial(){
+        delete special;
+        special = NULL;
+        int old_timeout = board.getTimeout();
+        board.timeout /= 1.5;
         scoreboard.updateScore(score);
     }
 
@@ -102,6 +125,7 @@ public:
     void initialize() {
         growth = NULL;
         poison = NULL;
+        special = NULL;
         board.initialize();
         score = 0;
         scoreboard.initialize(score);
@@ -115,6 +139,10 @@ public:
         snake.setDirection(right);
         handleNextPiece(snake.nextHead());
 
+        if(special == NULL){
+            createSpecial();
+        }
+
         if (poison == NULL) {
             createPoison();
         }
@@ -122,6 +150,7 @@ public:
         if (growth == NULL) {
             createGrowth();
         }
+        
     }
 
     void processInput() {
@@ -156,7 +185,10 @@ public:
 
     void updateState() {
         handleNextPiece(snake.nextHead());
-        
+        if(special == NULL){
+            createSpecial();
+        }
+
         if (growth == NULL) {
             createGrowth();
         }
