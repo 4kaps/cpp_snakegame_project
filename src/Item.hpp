@@ -22,3 +22,13 @@ public:
 
 };
 
+class Special : public Drawable {
+public:
+    Special(int y, int x) {
+        this->y = y;
+        this->x = x;
+        this->icon = '?';
+    }
+
+};
+
