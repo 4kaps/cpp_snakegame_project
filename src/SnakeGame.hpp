@@ -10,23 +10,26 @@
 #include "Snake.hpp"
 #include "Scoreboard.hpp"
 
-class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 이용해 값을 입출력한다.
+class SnakeGame
+{ // 게임의 구성에 대한 클래스다. Board클래스를 이용해 값을 입출력한다.
     Board board;
     bool game_over;
-    Growth* growth;
-    Poison* poison;
-    Special* special;
-    Wall* wall;
+    Growth *growth;
+    Poison *poison;
+    Special *special;
+    Wall *wall;
     Snake snake;
 
     Scoreboard scoreboard;
     int score;
 
-    void handleNextPiece(SnakePiece next) {
-        if (growth != NULL) {
-            switch (board.getCharAt(next.getY(), next.getX())) 
+    void handleNextPiece(SnakePiece next)
+    {
+        if (growth != NULL)
+        {
+            switch (board.getCharAt(next.getY(), next.getX()))
             {
-            int emptyRow, emptyCol;
+                int emptyRow, emptyCol;
 
             case '+':
                 eatGrowth();
@@ -49,61 +52,67 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
                 break;
-            case ' ': 
-            {
+            case ' ':
                 emptyRow = snake.tail().getY();
                 emptyCol = snake.tail().getX();
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
                 break;
-            }
-            
-            default:
+            case 'w':
                 game_over = true;
                 break;
 
+            default:
+                game_over = true;
+                break;
             }
         }
         board.add(next);
         snake.addPiece(next);
     }
 
-    void createGrowth() {
+    void createGrowth()
+    {
         int y, x;
         board.getEmptyCoordinates(y, x);
         growth = new Growth(y, x);
         board.add(*growth);
     }
 
-    void createPoison() {
+    void createPoison()
+    {
         int y, x;
         board.getEmptyCoordinates(y, x);
         poison = new Poison(y, x);
         board.add(*poison);
     }
 
-    void createSpecial(){
+    void createSpecial()
+    {
         int y, x;
         board.getEmptyCoordinates(y, x);
         special = new Special(y, x);
         board.add(*special);
     }
 
-    void eatGrowth() {
+    void eatGrowth()
+    {
         delete growth;
         growth = NULL;
         score += 100;
         scoreboard.updateScore(score);
     }
 
-    void eatPoison() {
+    void eatPoison()
+    {
         delete poison;
         poison = NULL;
         score += 50;
         scoreboard.updateScore(score);
     }
 
-    void eatSpecial(){
+    void eatSpecial()
+    {
         delete special;
         special = NULL;
         int old_timeout = board.getTimeout();
@@ -112,7 +121,8 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
     }
 
 public:
-    SnakeGame(int height, int width, int speed = 300) {
+    SnakeGame(int height, int width, int speed = 300)
+    {
         board = Board(height, width, speed);
         int sb_row = board.getStartRow() + height;
         int sb_col = board.getStartCol();
@@ -120,11 +130,13 @@ public:
         initialize();
     }
 
-    ~SnakeGame() {
+    ~SnakeGame()
+    {
         delete growth;
     }
 
-    void initialize() {
+    void initialize()
+    {
         growth = NULL;
         poison = NULL;
         special = NULL;
@@ -141,36 +153,53 @@ public:
         snake.setDirection(right);
         handleNextPiece(snake.nextHead());
 
-        if(special == NULL){
+        if (special == NULL)
+        {
             createSpecial();
         }
 
-        if (poison == NULL) {
+        if (poison == NULL)
+        {
             createPoison();
         }
 
-        if (growth == NULL) {
+        if (growth == NULL)
+        {
             createGrowth();
         }
 
         // 벽 추가
-        for (int i = 0; i <= 17; i++) {
-            for (int j = 0; j <= 35; j++) {
+        for (int i = 0; i <= 17; i++)
+        {
+            for (int j = 0; j <= 35; j++)
+            {
                 // 끝의 모서리 4부분 continue
-                if (i == 0 && (j == 0 || j == 34) || i == 17 && (j == 0 || j == 34)) continue;
+                if (i == 0 && (j == 0 || j == 34) || i == 17 && (j == 0 || j == 34))
+                    continue;
                 // 변이 아닌 가운데부분 continue
-                if (i > 0 && i < 17 && j > 0 && j < 35) continue;
+                if (i > 0 && i < 17 && j > 0 && j < 35)
+                    continue;
 
                 wall = new Wall(i, j);
                 board.add(*wall);
             }
-        }     
+        }
+
+        for (int j = 10; j <= 25; j++)
+        {
+            wall = new Wall(6, j);
+            board.add(*wall);
+            wall = new Wall(12, j);
+            board.add(*wall);
+        }
     }
 
-    void processInput() {
+    void processInput()
+    {
         chtype input = board.getInput();
         int old_timeout = board.getTimeout();
-        switch (input) {
+        switch (input)
+        {
         case KEY_UP:
         case 'w':
             snake.setDirection(up);
@@ -189,7 +218,8 @@ public:
             break;
         case 'p':
             board.setTimeout(-1);
-            while (board.getInput() != 'p');
+            while (board.getInput() != 'p')
+                ;
             board.setTimeout(old_timeout);
             break;
         default:
@@ -197,31 +227,38 @@ public:
         }
     }
 
-    void updateState() {
+    void updateState()
+    {
         handleNextPiece(snake.nextHead());
-        if(special == NULL){
+        if (special == NULL)
+        {
             createSpecial();
         }
 
-        if (growth == NULL) {
+        if (growth == NULL)
+        {
             createGrowth();
         }
 
-        if (poison == NULL) {
+        if (poison == NULL)
+        {
             createPoison();
         }
     }
 
-    void redraw() {
+    void redraw()
+    {
         board.refresh();
         scoreboard.refresh();
     }
 
-    bool isOver() {
+    bool isOver()
+    {
         return game_over;
     }
 
-    int getScore() {
+    int getScore()
+    {
         return score;
     }
 };
