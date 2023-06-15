@@ -232,20 +232,40 @@ public:
         {
         case KEY_UP:
         case 'w':
-            snake.setDirection(up);
-            break;
+            if(snake.getDirection() == down){
+                game_over = true;
+                break;
+            }else{
+                snake.setDirection(up);
+                break; 
+            }
         case KEY_DOWN:
         case 's':
-            snake.setDirection(down);
-            break;
+            if(snake.getDirection() == up){
+                game_over = true;
+                break;
+            }else{
+                snake.setDirection(down);
+                break; 
+            }
         case KEY_RIGHT:
         case 'd':
-            snake.setDirection(right);
-            break;
+            if(snake.getDirection() == left){
+                game_over = true;
+                break;
+            }else{
+                snake.setDirection(right);
+                break; 
+            }
         case KEY_LEFT:
         case 'a':
-            snake.setDirection(left);
-            break;
+            if(snake.getDirection() == right){
+                game_over = true;
+                break;
+            }else{
+                snake.setDirection(left);
+                break; 
+            }
         case 'p':
             board.setTimeout(-1);
             while (board.getInput() != 'p')
