@@ -20,6 +20,9 @@ class SnakeGame
     Wall *wall;
     immuneWall *immunewall;
     Snake snake;
+    time_t specialTimer;
+    time_t growthTimer;
+    time_t poisonTimer;
 
     Scoreboard scoreboard;
     int score;
@@ -72,12 +75,31 @@ class SnakeGame
         snake.addPiece(next);
     }
 
+    void deleteGrowth(){
+        board.add(Empty(growth->getY(), growth->getX()));
+        delete growth;
+        createGrowth();
+    }
+
+    void deletePoison(){
+        board.add(Empty(poison->getY(), poison->getX()));
+        delete poison;
+        createPoison();
+    }
+
+    void deleteSpecial(){
+        board.add(Empty(special->getY(), special->getX()));
+        delete special;
+        createSpecial();
+    }
+
     void createGrowth()
     {
         int y, x;
         board.getEmptyCoordinates(y, x);
         growth = new Growth(y, x);
         board.add(*growth);
+        time(&growthTimer);
     }
 
     void createPoison()
@@ -86,6 +108,7 @@ class SnakeGame
         board.getEmptyCoordinates(y, x);
         poison = new Poison(y, x);
         board.add(*poison);
+        time(&poisonTimer);
     }
 
     void createSpecial()
@@ -94,6 +117,7 @@ class SnakeGame
         board.getEmptyCoordinates(y, x);
         special = new Special(y, x);
         board.add(*special);
+        time(&specialTimer);
     }
 
     void eatGrowth()
@@ -134,6 +158,8 @@ public:
     ~SnakeGame()
     {
         delete growth;
+        delete poison;
+        delete special;
     }
 
     void initialize()
@@ -226,6 +252,9 @@ public:
                 ;
             board.setTimeout(old_timeout);
             break;
+        case 'n':
+            deleteGrowth();
+            break;
         default:
             break;
         }
@@ -234,6 +263,20 @@ public:
     void updateState()
     {
         handleNextPiece(snake.nextHead());
+        time_t currentTime;
+        time(&currentTime);
+
+        if (growth != NULL && difftime(currentTime, growthTimer) >= 10) {
+        deleteGrowth();
+        }
+
+        if (poison != NULL && difftime(currentTime, poisonTimer) >= 13) {
+        deletePoison();
+        }
+
+        if (special != NULL && difftime(currentTime, specialTimer) >= 15) {
+        deleteSpecial();
+        }
         if (special == NULL)
         {
             createSpecial();
