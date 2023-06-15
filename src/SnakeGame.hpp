@@ -291,6 +291,10 @@ public:
         {
             createPoison();
         }
+
+        if(snake.prev_pieces.size() < 3){
+            game_over = true;
+        }
     }
 
     void redraw()
