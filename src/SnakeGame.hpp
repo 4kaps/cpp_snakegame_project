@@ -26,6 +26,7 @@ class SnakeGame
 
     Scoreboard scoreboard;
     int score;
+    int elapsed = 0;
 
     void handleNextPiece(SnakePiece next)
     {
@@ -315,6 +316,7 @@ public:
         if(snake.prev_pieces.size() < 3){
             game_over = true;
         }
+        scoreboard.updateTime(elapsed++);
     }
 
     void redraw()
@@ -333,3 +335,4 @@ public:
         return score;
     }
 };
+
