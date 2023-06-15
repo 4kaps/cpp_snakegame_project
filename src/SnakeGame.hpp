@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "Item.hpp"
+#include "Wall.hpp"
 #include "Empty.hpp"
 #include "Board.hpp"
 #include "Drawable.hpp"
@@ -15,6 +16,7 @@ class SnakeGame { // 게임의 구성에 대한 클래스다. Board클래스를 
     Growth* growth;
     Poison* poison;
     Special* special;
+    Wall* wall;
     Snake snake;
 
     Scoreboard scoreboard;
@@ -149,6 +151,22 @@ public:
 
         if (growth == NULL) {
             createGrowth();
+        }
+
+        // 벽 추가
+        for (int i = 0; i <= 17; i++) {
+            if (i == 0 || i == 17) {
+                for (int j = 1; j <= 34; j++) {
+                    wall = new Wall(i, j);
+                    board.add(*wall);
+                }
+            }
+            else {
+                wall = new Wall(i, 0);
+                board.add(*wall);
+                wall = new Wall(i, 35);
+                board.add(*wall);
+            }
         }
         
     }
