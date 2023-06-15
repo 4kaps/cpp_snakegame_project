@@ -155,20 +155,16 @@ public:
 
         // 벽 추가
         for (int i = 0; i <= 17; i++) {
-            if (i == 0 || i == 17) {
-                for (int j = 1; j <= 34; j++) {
-                    wall = new Wall(i, j);
-                    board.add(*wall);
-                }
-            }
-            else {
-                wall = new Wall(i, 0);
-                board.add(*wall);
-                wall = new Wall(i, 35);
+            for (int j = 0; j <= 35; j++) {
+                // 끝의 모서리 4부분 continue
+                if (i == 0 && (j == 0 || j == 34) || i == 17 && (j == 0 || j == 34)) continue;
+                // 변이 아닌 가운데부분 continue
+                if (i > 0 && i < 17 && j > 0 && j < 35) continue;
+
+                wall = new Wall(i, j);
                 board.add(*wall);
             }
-        }
-        
+        }     
     }
 
     void processInput() {
