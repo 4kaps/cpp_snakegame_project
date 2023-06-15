@@ -25,10 +25,11 @@ public:
 };
 
 class Snake {
-    std::queue<SnakePiece> prev_pieces;
     Direction cur_direction;
 
 public:
+    std::queue<SnakePiece> prev_pieces;
+
     Snake() {
         cur_direction = down;
     }
