@@ -18,6 +18,7 @@ class SnakeGame
     Poison *poison;
     Special *special;
     Wall *wall;
+    immuneWall *immunewall;
     Snake snake;
 
     Scoreboard scoreboard;
@@ -168,20 +169,23 @@ public:
             createGrowth();
         }
 
-        // 벽 추가
+        // wall 추가
         for (int i = 0; i <= 17; i++)
         {
             for (int j = 0; j <= 35; j++)
             {
-                // 끝의 모서리 4부분 continue
-                if (i == 0 && (j == 0 || j == 34) || i == 17 && (j == 0 || j == 34))
-                    continue;
+                // 끝의 모서리 4부분 -> immuneWall
+                if (i == 0 && (j == 0 || j == 35) || i == 17 && (j == 0 || j == 35)) {
+                    immunewall = new immuneWall(i,j);
+                    board.add(*immunewall);
+                }
                 // 변이 아닌 가운데부분 continue
-                if (i > 0 && i < 17 && j > 0 && j < 35)
+                else if (i > 0 && i < 17 && j > 0 && j < 35)
                     continue;
-
+                else {
                 wall = new Wall(i, j);
                 board.add(*wall);
+                }
             }
         }
 
