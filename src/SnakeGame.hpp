@@ -81,8 +81,14 @@ class SnakeGame
             }
         }
         if (board.getCharAt(next.getY(), next.getX()) == 'G') {
-            board.add(SnakePiece(5, 5));
-            snake.addPiece(SnakePiece(5, 5));
+            if (next.getY() == g1->getY() && next.getX() == g1->getX()) {
+                board.add(snake.gateNext(g2->getY(), g2->getX()));
+                snake.addPiece(snake.gateNext(g2->getY(), g2->getX()));
+            }
+            else {
+                board.add(snake.gateNext(g1->getY(), g1->getX()));
+                snake.addPiece(snake.gateNext(g1->getY(), g1->getX()));
+            }
         }
         else {
             board.add(next);
