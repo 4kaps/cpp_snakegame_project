@@ -50,9 +50,9 @@ public:
         mvwprintw(stage_win, 0, 0, "Stage :"); 
 
         mvwprintw(mission_box_name, 0, 0, "< Mission >"); 
-        mvwprintw(mission_length, 0, 0, "Length : 10");
-        mvwprintw(mission_growth, 0, 0, "+ : 5"); 
-        mvwprintw(mission_poison, 0, 0, "- : 2"); 
+        mvwprintw(mission_length, 0, 0, "Length : 6");
+        mvwprintw(mission_growth, 0, 0, "+ : 1"); 
+        mvwprintw(mission_poison, 0, 0, "- : 1"); 
         refresh();
     }
 
