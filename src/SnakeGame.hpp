@@ -87,13 +87,54 @@ class SnakeGame
             }
         }
         if (board.getCharAt(next.getY(), next.getX()) == 'G') {
-            if (next.getY() == g1->getY() && next.getX() == g1->getX()) {
-                board.add(snake.gateNext(g2->getY(), g2->getX()));
-                snake.addPiece(snake.gateNext(g2->getY(), g2->getX()));
+            SnakePiece G1 = snake.gateNext(g1->getY(), g1->getX()); // gate의 앞 방향(snake의 이동방향)의 객체
+            SnakePiece G2 = snake.gateNext(g2->getY(), g2->getX());
+
+            SnakePiece headNext = snake.nextHead(); // 현재 deqeue의 rear부분에 있는 자료의 다음 방향 객체 반환
+
+            chtype g1nextChar = board.getCharAt(headNext.getY(), headNext.getX());
+            chtype g2nextChar = board.getCharAt(headNext.getY(), headNext.getX());
+
+            if (next.getY() == g1->getY() && next.getX() == g1->getX()) { // 내가 들어간 게이트가 g1일 때 (문제X)
+                snake.addPiece(SnakePiece(g2->getY(), g2->getX())); // 일단 도착gate 그 위치에 머리를 집어넣는다 (문제X)
+                if (g2nextChar == ' ') {
+                    board.setTimeout(-1);
+                    while (board.getInput() != 'p');
+                
+                    snake.clock(); // cur_direction 시계방향으로 변경
+                }
+                if (g2nextChar != ' ') {
+                    snake.clock();
+                    snake.clock();
+                }
+                if (g2nextChar != ' ') {
+                    snake.reverseClock();
+                }
+                snake.removeBackPiece();
+                board.add(headNext);
+                snake.addPiece(headNext); 
             }
             else {
-                board.add(snake.gateNext(g1->getY(), g1->getX()));
-                snake.addPiece(snake.gateNext(g1->getY(), g1->getX()));
+                snake.addPiece(SnakePiece(g1->getY(), g1->getX())); // 일단 도착gate 그 위치에 머리를 집어넣는다.
+                if (g1nextChar != ' ') {
+                    snake.removeBackPiece();
+                    snake.clock();
+                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
+                }
+                if (g1nextChar != ' ') {
+                    snake.removeBackPiece();
+                    snake.clock();
+                    snake.clock();
+                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
+                }
+                if (g1nextChar != ' ') {
+                    snake.removeBackPiece();
+                    snake.reverseClock();
+                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
+                }
+                snake.removeBackPiece();
+                board.add(G1);
+                snake.addPiece(G1); 
             }
         }
         else {
@@ -269,12 +310,29 @@ public:
             }
         }
 
-        for (int j = 10; j <= 25; j++)
+        for (int i = 6; i <= 7; i++)
         {
-            wall = new Wall(6, j);
+            wall = new Wall(i, i + 1);
             board.add(*wall);
-            wall = new Wall(12, j);
+            wall = new Wall(i, i + 2);
             board.add(*wall);
+        }
+
+        for (int i = 9; i <= 10; i++)
+        {
+            wall = new Wall(i, i+16 );
+            board.add(*wall);
+            wall = new Wall(i , i + 17);
+            board.add(*wall);
+        }
+
+        for (int i = 9; i <= 25; i++)
+        {
+            if ((i != 16) && (i != 17))
+            {
+                wall = new Wall(8, i);
+                board.add(*wall);
+            }
         }
 
         createGate();
