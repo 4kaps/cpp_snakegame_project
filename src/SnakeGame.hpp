@@ -90,14 +90,38 @@ class SnakeGame
                 break;
             }
         }
-        if (board.getCharAt(next.getY(), next.getX()) == 'G') {
+         if (board.getCharAt(next.getY(), next.getX()) == 'G') {
             if (next.getY() == g1->getY() && next.getX() == g1->getX()) {
+                snake.addPiece(SnakePiece(g2->getY(), g2->getX()));
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.clock();
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.reverseClock();
+                }
+                snake.removeBackPiece();
                 board.add(snake.gateNext(g2->getY(), g2->getX()));
-                snake.addPiece(snake.gateNext(g2->getY(), g2->getX()));
+                snake.addPiece(snake.gateNext(g2->getY(), g2->getX())); 
             }
             else {
+                snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.clock();
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ') {
+                    snake.reverseClock();
+                }
+                snake.removeBackPiece();
                 board.add(snake.gateNext(g1->getY(), g1->getX()));
-                snake.addPiece(snake.gateNext(g1->getY(), g1->getX()));
+                snake.addPiece(snake.gateNext(g1->getY(), g1->getX())); 
             }
         }
         else {
