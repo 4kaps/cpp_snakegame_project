@@ -36,6 +36,10 @@ class SnakeGame
     int missionLength;
     int missionGrowth;
     int missionPoison;
+    bool mission1;
+    bool mission2;
+    bool mission3;
+    int stage = 1;
 
     void handleNextPiece(SnakePiece next)
     {
@@ -87,54 +91,13 @@ class SnakeGame
             }
         }
         if (board.getCharAt(next.getY(), next.getX()) == 'G') {
-            SnakePiece G1 = snake.gateNext(g1->getY(), g1->getX()); // gate의 앞 방향(snake의 이동방향)의 객체
-            SnakePiece G2 = snake.gateNext(g2->getY(), g2->getX());
-
-            SnakePiece headNext = snake.nextHead(); // 현재 deqeue의 rear부분에 있는 자료의 다음 방향 객체 반환
-
-            chtype g1nextChar = board.getCharAt(headNext.getY(), headNext.getX());
-            chtype g2nextChar = board.getCharAt(headNext.getY(), headNext.getX());
-
-            if (next.getY() == g1->getY() && next.getX() == g1->getX()) { // 내가 들어간 게이트가 g1일 때 (문제X)
-                snake.addPiece(SnakePiece(g2->getY(), g2->getX())); // 일단 도착gate 그 위치에 머리를 집어넣는다 (문제X)
-                if (g2nextChar == ' ') {
-                    board.setTimeout(-1);
-                    while (board.getInput() != 'p');
-                
-                    snake.clock(); // cur_direction 시계방향으로 변경
-                }
-                if (g2nextChar != ' ') {
-                    snake.clock();
-                    snake.clock();
-                }
-                if (g2nextChar != ' ') {
-                    snake.reverseClock();
-                }
-                snake.removeBackPiece();
-                board.add(headNext);
-                snake.addPiece(headNext); 
+            if (next.getY() == g1->getY() && next.getX() == g1->getX()) {
+                board.add(snake.gateNext(g2->getY(), g2->getX()));
+                snake.addPiece(snake.gateNext(g2->getY(), g2->getX()));
             }
             else {
-                snake.addPiece(SnakePiece(g1->getY(), g1->getX())); // 일단 도착gate 그 위치에 머리를 집어넣는다.
-                if (g1nextChar != ' ') {
-                    snake.removeBackPiece();
-                    snake.clock();
-                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
-                }
-                if (g1nextChar != ' ') {
-                    snake.removeBackPiece();
-                    snake.clock();
-                    snake.clock();
-                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
-                }
-                if (g1nextChar != ' ') {
-                    snake.removeBackPiece();
-                    snake.reverseClock();
-                    snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
-                }
-                snake.removeBackPiece();
-                board.add(G1);
-                snake.addPiece(G1); 
+                board.add(snake.gateNext(g1->getY(), g1->getX()));
+                snake.addPiece(snake.gateNext(g1->getY(), g1->getX()));
             }
         }
         else {
@@ -266,9 +229,12 @@ public:
         length = 4;
         growthAmount = 0;
         poisonAmount = 0;
-        missionLength = 10;
+        missionLength = 6;
         missionGrowth = 1;
-        missionPoison = 2;
+        missionPoison = 1;
+        mission1 = false;
+        mission2 = false;
+        mission3 = false;
         handleNextPiece(SnakePiece(1, 1));
         handleNextPiece(snake.nextHead());
         handleNextPiece(snake.nextHead());
@@ -310,32 +276,73 @@ public:
             }
         }
 
-        for (int i = 6; i <= 7; i++)
-        {
-            wall = new Wall(i, i + 1);
-            board.add(*wall);
-            wall = new Wall(i, i + 2);
-            board.add(*wall);
-        }
-
-        for (int i = 9; i <= 10; i++)
-        {
-            wall = new Wall(i, i+16 );
-            board.add(*wall);
-            wall = new Wall(i , i + 17);
-            board.add(*wall);
-        }
-
-        for (int i = 9; i <= 25; i++)
-        {
-            if ((i != 16) && (i != 17))
+        if(stage == 1){
+            for (int j = 10; j <= 25; j++)
             {
-                wall = new Wall(8, i);
+                wall = new Wall(6, j);
+                board.add(*wall);
+                wall = new Wall(12, j);
                 board.add(*wall);
             }
+            createGate();
         }
 
-        createGate();
+        if(stage == 2){
+            for (int j = 10; j <= 25; j++)
+            {   
+                board.add(Empty(6, j));
+                board.add(Empty(12, j));
+            }
+
+            for (int i = 6; i <= 7; i++)
+            {
+                wall = new Wall(i, i + 1);
+                board.add(*wall);
+                wall = new Wall(i, i + 2);
+                board.add(*wall);
+            }
+
+            for (int i = 9; i <= 10; i++)
+            {
+                wall = new Wall(i, i+16 );
+                board.add(*wall);
+                wall = new Wall(i , i + 17);
+                board.add(*wall);
+            }
+
+            for (int i = 9; i <= 25; i++)
+            {
+                if ((i != 16) && (i != 17))
+                {
+                    wall = new Wall(8, i);
+                    board.add(*wall);
+                }
+            }
+            createGate();
+        }
+
+        if(stage == 3){
+            for (int i = 6; i <= 7; i++)
+            {
+                board.add(Empty(i, i + 1));
+                board.add(Empty(i, i + 2));
+            }
+
+            for (int i = 9; i <= 10; i++)
+            {
+                board.add(Empty(i, i+16));
+                board.add(Empty(i, i+17));
+            }
+
+            for (int i = 9; i <= 25; i++)
+            {
+                if ((i != 16) && (i != 17))
+                {
+                    board.add(Empty(8, i));
+                }
+            }
+            createGate();
+        }
     }
 
     void processInput()
@@ -434,23 +441,39 @@ public:
         scoreboard.updateLength(length);
         scoreboard.updateGrowth(growthAmount);
         scoreboard.updatePoison(poisonAmount);
+        scoreboard.updateStage(stage);
 
         if(growthAmount >= missionGrowth){
             scoreboard.updateMissionGrowth('v');
+            mission1 = true;
         }else{
             scoreboard.updateMissionGrowth(' ');
         }
 
         if(length >= missionLength){
             scoreboard.updateMissionLength('v');
+            mission2 = true;
         }else{
             scoreboard.updateMissionLength(' ');
         }
 
         if(poisonAmount >= missionPoison){
             scoreboard.updateMissionPoison('v');
+            mission3 = true;
         }else{
             scoreboard.updateMissionPoison(' ');
+        }
+
+        if(mission1 && mission2 && mission3){
+            stage++;
+            initialize();
+            while(snake.prev_pieces.size() > 4){
+                int emptyRow = snake.tail().getY();
+                int emptyCol = snake.tail().getX();
+                board.add(Empty(emptyRow, emptyCol));
+                snake.removePiece();
+            }
+            //goNextStage();
         }
     }
 
