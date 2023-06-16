@@ -9,6 +9,7 @@
 #include "Drawable.hpp"
 #include "Snake.hpp"
 #include "Scoreboard.hpp"
+#include "Gate.hpp"
 
 class SnakeGame
 { // 게임의 구성에 대한 클래스다. Board클래스를 이용해 값을 입출력한다.
@@ -18,6 +19,8 @@ class SnakeGame
     Poison *poison;
     Special *special;
     Wall *wall;
+    Gate *g1;
+    Gate *g2;
     immuneWall *immunewall;
     Snake snake;
     time_t specialTimer;
@@ -66,14 +69,25 @@ class SnakeGame
             case 'w':
                 game_over = true;
                 break;
-
+            case 'G': // G에 닿게 되면 (5, 5)로 나오게 구현한 상태
+                emptyRow = snake.tail().getY();
+                emptyCol = snake.tail().getX();
+                board.add(Empty(emptyRow, emptyCol));
+                snake.removePiece();
+                break;
             default:
                 game_over = true;
                 break;
             }
         }
-        board.add(next);
-        snake.addPiece(next);
+        if (board.getCharAt(next.getY(), next.getX()) == 'G') {
+            board.add(SnakePiece(5, 5));
+            snake.addPiece(SnakePiece(5, 5));
+        }
+        else {
+            board.add(next);
+            snake.addPiece(next);
+        }
     }
 
     void deleteGrowth(){
@@ -145,6 +159,24 @@ class SnakeGame
         board.timeout /= 1.5;
         scoreboard.updateScore(score);
     }
+
+    void createGate()
+    {
+        int gate1Choice;
+        int gate2Choice;
+        srand(static_cast<unsigned int>(time(0))); // 시간을 기반으로 srand()을 초기화
+        gate1Choice = rand() % 106; // 0부터 105까지의 난수 생성
+        do {
+            gate2Choice = rand() % 106; // 두 번째 랜덤 숫자
+        } while (gate1Choice == gate2Choice); // 두 번째 숫자가 첫 번째 숫자와 같을 경우 반복
+        
+        g1 = new Gate(gate1Choice);
+        g2 = new Gate(gate2Choice);
+
+        board.add(*g1);
+        board.add(*g2);
+
+        }
 
 public:
     SnakeGame(int height, int width, int speed = 300)
@@ -223,6 +255,8 @@ public:
             wall = new Wall(12, j);
             board.add(*wall);
         }
+
+        createGate();
     }
 
     void processInput()
@@ -335,4 +369,3 @@ public:
         return score;
     }
 };
-
