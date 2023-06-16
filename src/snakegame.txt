@@ -1,0 +1,30 @@
+        wall = new Wall(3, 3);
+        board.add(*wall);
+
+        wall = new Wall(15, 32);
+        board.add(*wall);
+
+        for (int i = 3; i <= 7; i++)
+        {
+            wall = new Wall(i, i + 1);
+            board.add(*wall);
+            wall = new Wall(i, i + 2);
+            board.add(*wall);
+        }
+
+        for (int i = 9; i <= 15; i++)
+        {
+            wall = new Wall(i + 16, i + 17);
+            board.add(*wall);
+            wall = new Wall(i + 16, i + 18);
+            board.add(*wall);
+        }
+
+        for (int i = 9; i <= 25; i++)
+        {
+            if ((i != 16) && (i != 17))
+            {
+                wall = new Wall(8, i);
+                board.add(*wall);
+            }
+        }
