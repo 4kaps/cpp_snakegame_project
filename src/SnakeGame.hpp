@@ -365,6 +365,18 @@ public:
                     board.add(Empty(8, i));
                 }
             }
+
+            int a[10] = {4, 10, 4, 10, 4, 10, 7, 7, 7, 7};
+            int b[10] = {4, 4, 30, 30, 17, 17, 9, 12, 22, 25};
+
+            for (int j = 0; j <10 ; j++){
+	            for (int i = a[j]; i <= a[j]+3 ; i++ ){
+                wall = new Wall (i, b[j]);
+                board.add(*wall);
+                wall = new Wall (i, b[j]+1);
+                board.add(*wall);
+	            }
+            }
             createGate();
         }
     }
