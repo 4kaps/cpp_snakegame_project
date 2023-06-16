@@ -90,35 +90,72 @@ class SnakeGame
                 break;
             }
         }
-        if (board.getCharAt(next.getY(), next.getX()) == 'G') {
-            if (next.getY() == g1->getY() && next.getX() == g1->getX()) {
+        if (board.getCharAt(next.getY(), next.getX()) == 'G')
+        {
+            if (next.getY() == g1->getY() && next.getX() == g1->getX())
+            {
+                snake.addPiece(SnakePiece(g2->getY(), g2->getX()));
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.clock();
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.reverseClock();
+                }
+                snake.removeBackPiece();
                 board.add(snake.gateNext(g2->getY(), g2->getX()));
                 snake.addPiece(snake.gateNext(g2->getY(), g2->getX()));
             }
-            else {
+            else
+            {
+                snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.clock();
+                    snake.clock();
+                }
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                {
+                    snake.reverseClock();
+                }
+                snake.removeBackPiece();
                 board.add(snake.gateNext(g1->getY(), g1->getX()));
                 snake.addPiece(snake.gateNext(g1->getY(), g1->getX()));
             }
         }
-        else {
+        else
+        {
             board.add(next);
             snake.addPiece(next);
         }
     }
 
-    void deleteGrowth(){
+    void deleteGrowth()
+    {
         board.add(Empty(growth->getY(), growth->getX()));
         delete growth;
         createGrowth();
     }
 
-    void deletePoison(){
+    void deletePoison()
+    {
         board.add(Empty(poison->getY(), poison->getX()));
         delete poison;
         createPoison();
     }
 
-    void deleteSpecial(){
+    void deleteSpecial()
+    {
         board.add(Empty(special->getY(), special->getX()));
         delete special;
         createSpecial();
@@ -180,23 +217,32 @@ class SnakeGame
         scoreboard.updateScore(score);
     }
 
-    void createGate()
+    void createGate(int stage)
     {
+        int size;
         int gate1Choice;
         int gate2Choice;
+        if (stage == 1)
+            size = 100;
+        else if (stage == 2)
+            size = 132;
+        else if (stage == 3)
+            size = 123;
+        else
+            stage = 180;
         srand(static_cast<unsigned int>(time(0))); // 시간을 기반으로 srand()을 초기화
-        gate1Choice = rand() % 106; // 0부터 105까지의 난수 생성
-        do {
-            gate2Choice = rand() % 106; // 두 번째 랜덤 숫자
+        gate1Choice = rand() % size;               // 0부터 105까지의 난수 생성
+        do
+        {
+            gate2Choice = rand() % size;      // 두 번째 랜덤 숫자
         } while (gate1Choice == gate2Choice); // 두 번째 숫자가 첫 번째 숫자와 같을 경우 반복
-        
-        g1 = new Gate(gate1Choice);
-        g2 = new Gate(gate2Choice);
+
+        g1 = new Gate(stage - 1, gate1Choice);
+        g2 = new Gate(stage - 1, gate2Choice);
 
         board.add(*g1);
         board.add(*g2);
-
-        }
+    }
 
 public:
     SnakeGame(int height, int width, int speed = 300)
@@ -262,21 +308,26 @@ public:
             for (int j = 0; j <= 35; j++)
             {
                 // 끝의 모서리 4부분 -> immuneWall
-                if (i == 0 && (j == 0 || j == 35) || i == 17 && (j == 0 || j == 35)) {
-                    immunewall = new immuneWall(i,j);
+                if (i == 0 && (j == 0 || j == 35) || i == 17 && (j == 0 || j == 35))
+                {
+                    immunewall = new immuneWall(i, j);
                     board.add(*immunewall);
                 }
                 // 변이 아닌 가운데부분 continue
                 else if (i > 0 && i < 17 && j > 0 && j < 35)
                     continue;
-                else {
-                wall = new Wall(i, j);
-                board.add(*wall);
+                else
+                {
+                    wall = new Wall(i, j);
+                    board.add(*wall);
                 }
             }
         }
+        if (stage == 1)
+            createGate(stage);
 
-        if(stage == 1){
+        if (stage == 2)
+        {
             for (int j = 10; j <= 25; j++)
             {
                 wall = new Wall(6, j);
@@ -284,12 +335,13 @@ public:
                 wall = new Wall(12, j);
                 board.add(*wall);
             }
-            createGate();
+            createGate(stage);
         }
 
-        if(stage == 2){
+        if (stage == 3)
+        {
             for (int j = 10; j <= 25; j++)
-            {   
+            {
                 board.add(Empty(6, j));
                 board.add(Empty(12, j));
             }
@@ -304,9 +356,9 @@ public:
 
             for (int i = 9; i <= 10; i++)
             {
-                wall = new Wall(i, i+16 );
+                wall = new Wall(i, i + 16);
                 board.add(*wall);
-                wall = new Wall(i , i + 17);
+                wall = new Wall(i, i + 17);
                 board.add(*wall);
             }
 
@@ -318,10 +370,11 @@ public:
                     board.add(*wall);
                 }
             }
-            createGate();
+            createGate(stage);
         }
 
-        if(stage == 3){
+        if (stage == 4)
+        {
             for (int i = 6; i <= 7; i++)
             {
                 board.add(Empty(i, i + 1));
@@ -330,8 +383,8 @@ public:
 
             for (int i = 9; i <= 10; i++)
             {
-                board.add(Empty(i, i+16));
-                board.add(Empty(i, i+17));
+                board.add(Empty(i, i + 16));
+                board.add(Empty(i, i + 17));
             }
 
             for (int i = 9; i <= 25; i++)
@@ -341,7 +394,21 @@ public:
                     board.add(Empty(8, i));
                 }
             }
-            createGate();
+
+            int a[10] = {4, 10, 4, 10, 4, 10, 7, 7, 7, 7};
+            int b[10] = {4, 4, 30, 30, 17, 17, 9, 12, 22, 25};
+
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = a[j]; i <= a[j] + 3; i++)
+                {
+                    wall = new Wall(i, b[j]);
+                    board.add(*wall);
+                    wall = new Wall(i, b[j] + 1);
+                    board.add(*wall);
+                }
+            }
+            createGate(stage);
         }
     }
 
@@ -353,39 +420,51 @@ public:
         {
         case KEY_UP:
         case 'w':
-            if(snake.getDirection() == down){
+            if (snake.getDirection() == down)
+            {
                 game_over = true;
                 break;
-            }else{
+            }
+            else
+            {
                 snake.setDirection(up);
-                break; 
+                break;
             }
         case KEY_DOWN:
         case 's':
-            if(snake.getDirection() == up){
+            if (snake.getDirection() == up)
+            {
                 game_over = true;
                 break;
-            }else{
+            }
+            else
+            {
                 snake.setDirection(down);
-                break; 
+                break;
             }
         case KEY_RIGHT:
         case 'd':
-            if(snake.getDirection() == left){
+            if (snake.getDirection() == left)
+            {
                 game_over = true;
                 break;
-            }else{
+            }
+            else
+            {
                 snake.setDirection(right);
-                break; 
+                break;
             }
         case KEY_LEFT:
         case 'a':
-            if(snake.getDirection() == right){
+            if (snake.getDirection() == right)
+            {
                 game_over = true;
                 break;
-            }else{
+            }
+            else
+            {
                 snake.setDirection(left);
-                break; 
+                break;
             }
         case 'p':
             board.setTimeout(-1);
@@ -407,16 +486,19 @@ public:
         time_t currentTime;
         time(&currentTime);
         double doubleTimeout = double(board.timeout);
-        if (growth != NULL && difftime(currentTime, growthTimer) >= 10) {
-        deleteGrowth();
+        if (growth != NULL && difftime(currentTime, growthTimer) >= 10)
+        {
+            deleteGrowth();
         }
 
-        if (poison != NULL && difftime(currentTime, poisonTimer) >= 13) {
-        deletePoison();
+        if (poison != NULL && difftime(currentTime, poisonTimer) >= 13)
+        {
+            deletePoison();
         }
 
-        if (special != NULL && difftime(currentTime, specialTimer) >= 15) {
-        deleteSpecial();
+        if (special != NULL && difftime(currentTime, specialTimer) >= 15)
+        {
+            deleteSpecial();
         }
         if (special == NULL)
         {
@@ -433,7 +515,8 @@ public:
             createPoison();
         }
 
-        if(snake.prev_pieces.size() < 3){
+        if (snake.prev_pieces.size() < 3)
+        {
             game_over = true;
         }
         scoreboard.updateTime(elapsed++);
@@ -443,37 +526,48 @@ public:
         scoreboard.updatePoison(poisonAmount);
         scoreboard.updateStage(stage);
 
-        if(growthAmount >= missionGrowth){
+        if (growthAmount >= missionGrowth)
+        {
             scoreboard.updateMissionGrowth('v');
             mission1 = true;
-        }else{
+        }
+        else
+        {
             scoreboard.updateMissionGrowth(' ');
         }
 
-        if(length >= missionLength){
+        if (length >= missionLength)
+        {
             scoreboard.updateMissionLength('v');
             mission2 = true;
-        }else{
+        }
+        else
+        {
             scoreboard.updateMissionLength(' ');
         }
 
-        if(poisonAmount >= missionPoison){
+        if (poisonAmount >= missionPoison)
+        {
             scoreboard.updateMissionPoison('v');
             mission3 = true;
-        }else{
+        }
+        else
+        {
             scoreboard.updateMissionPoison(' ');
         }
 
-        if(mission1 && mission2 && mission3){
+        if (mission1 && mission2 && mission3)
+        {
             stage++;
             initialize();
-            while(snake.prev_pieces.size() > 4){
+            while (snake.prev_pieces.size() > 4)
+            {
                 int emptyRow = snake.tail().getY();
                 int emptyCol = snake.tail().getX();
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
             }
-            //goNextStage();
+            // goNextStage();
         }
     }
 
