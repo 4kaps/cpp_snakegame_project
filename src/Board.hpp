@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include "Drawable.hpp"
 #include "Time.hpp"
-
+class SnakeGame;
 class Board { // 윈도우를 다루는 클래스다. 초기화부터 해서 값 입/출력, 윈도우 변수를 가진다.
 public:
 
@@ -81,12 +81,10 @@ public:
     int getTimeout() {
         return timeout;
     }
-
+    int timeout;
 private:
     WINDOW* board_win;
     int height, width, start_row, start_col;
-    int timeout;
-
     void construct(int height, int width, int speed) { // 입력받은 높이, 너비값으로 윈도우 생성
         int xMax, yMax;
         getmaxyx(stdscr, yMax, xMax); // 현재 내가 연 터미널의 세로길이와 가로길이를 1, 3번째 인수에 저장함.
@@ -95,7 +93,7 @@ private:
         start_row = yMax / 2 - height / 2;
         start_col = xMax / 2 - width / 2;
 
-        timeout = speed;
+        timeout = speed / 2;
 
         board_win = newwin(height, width, start_row, start_col); // 새로운 윈도우 생성, 크기는 1, 2번째 인수
         setTimeout(speed);

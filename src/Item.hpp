@@ -2,12 +2,33 @@
 #include <ncurses.h>
 #include "Drawable.hpp"
 
-class Item : public Drawable {
+class Growth : public Drawable {
 public:
-    Item(int y, int x) {
+    Growth(int y, int x) {
         this->y = y;
         this->x = x;
         this->icon = '+';
     }
 
 };
+
+class Poison : public Drawable {
+public:
+    Poison(int y, int x) {
+        this->y = y;
+        this->x = x;
+        this->icon = '-';
+    }
+
+};
+
+class Special : public Drawable {
+public:
+    Special(int y, int x) {
+        this->y = y;
+        this->x = x;
+        this->icon = '?';
+    }
+
+};
+

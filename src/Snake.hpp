@@ -25,10 +25,11 @@ public:
 };
 
 class Snake {
-    std::queue<SnakePiece> prev_pieces;
     Direction cur_direction;
 
 public:
+    std::queue<SnakePiece> prev_pieces;
+
     Snake() {
         cur_direction = down;
     }
@@ -58,6 +59,27 @@ public:
             cur_direction = d;
     }
 
+    void clock(Direction d) {
+        if (cur_direction == up)
+            cur_direction == right;
+        if (cur_direction == right)
+            cur_direction == down;
+        if (cur_direction == down)
+            cur_direction == left;
+        if (cur_direction == left)
+            cur_direction == up;
+    }
+    void reverseClock(Direction d) {
+        if (cur_direction == up)
+            cur_direction == left;
+        if (cur_direction == left)
+            cur_direction == down;
+        if (cur_direction == down)
+            cur_direction == right;
+        if (cur_direction == right)
+            cur_direction == up;
+    }
+
     SnakePiece nextHead() {
         int row = head().getY();
         int col = head().getX();
@@ -77,6 +99,24 @@ public:
             break;
         }
         return SnakePiece(row, col);
+    }
+
+    SnakePiece gateNext(int y, int x) {
+        switch (cur_direction) {
+        case down:
+            y++;
+            break;
+        case up:
+            y--;
+            break;
+        case left:
+            x--;
+            break;
+        case right:
+            x++;
+            break;
+        }
+        return SnakePiece(y, x);
     }
 
 
