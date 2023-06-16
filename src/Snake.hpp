@@ -80,5 +80,23 @@ public:
         return SnakePiece(row, col);
     }
 
+    SnakePiece gateNext(int y, int x) {
+        switch (cur_direction) {
+        case down:
+            y++;
+            break;
+        case up:
+            y--;
+            break;
+        case left:
+            x--;
+            break;
+        case right:
+            x++;
+            break;
+        }
+        return SnakePiece(y, x);
+    }
+
 
 };
