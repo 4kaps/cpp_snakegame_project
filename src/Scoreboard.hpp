@@ -15,6 +15,7 @@ class Scoreboard {
     WINDOW *mission_growth;
     WINDOW *mission_poison;
     WINDOW *out_line2;
+    WINDOW *stage_win;
 public:
     Scoreboard() {}
 
@@ -25,7 +26,8 @@ public:
         length_win = newwin(1, width, y - 14, x + 38);
         growth_win = newwin(1, width, y - 13, x + 38);
         poison_win = newwin(1, width, y - 12, x + 38);
-        out_line1 = newwin(8, width + 2, y - 18, x + 37);
+        stage_win = newwin(1, width, y - 11, x + 38);
+        out_line1 = newwin(9, width + 2, y - 18, x + 37);
         
         mission_box_name = newwin(1, width, y - 6, x + 38);
         mission_length = newwin(1, width, y - 5, x + 38);
@@ -45,6 +47,7 @@ public:
         mvwprintw(length_win, 0, 0, "Length :"); 
         mvwprintw(growth_win, 0, 0, "+ :"); 
         mvwprintw(poison_win, 0, 0, "- :"); 
+        mvwprintw(stage_win, 0, 0, "Stage :"); 
 
         mvwprintw(mission_box_name, 0, 0, "< Mission >"); 
         mvwprintw(mission_length, 0, 0, "Length : 10");
@@ -89,6 +92,10 @@ public:
         mvwprintw(mission_poison, 0, mission_poison->_maxx - 20, "(%c)", isComplete3);
     }
 
+    void updateStage(int stage){
+        mvwprintw(stage_win, 0, stage_win->_maxx - 20, "[%ld]", stage);
+    }
+
     void clear() {
         wclear(out_line1);
         wclear(out_line2);
@@ -98,6 +105,7 @@ public:
         wclear(length_win);
         wclear(growth_win);
         wclear(poison_win);
+        wclear(stage_win);
 
         wclear(mission_box_name);
         wclear(mission_growth);
@@ -114,6 +122,7 @@ public:
         wrefresh(length_win);
         wrefresh(growth_win);
         wrefresh(poison_win);
+        wrefresh(stage_win);
 
         wrefresh(mission_box_name);
         wrefresh(mission_growth);
