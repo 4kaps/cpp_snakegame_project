@@ -30,6 +30,12 @@ class SnakeGame
     Scoreboard scoreboard;
     int score;
     int elapsed = 0;
+    int length;
+    int growthAmount;
+    int poisonAmount;
+    int missionLength;
+    int missionGrowth;
+    int missionPoison;
 
     void handleNextPiece(SnakePiece next)
     {
@@ -145,6 +151,8 @@ class SnakeGame
     {
         delete growth;
         growth = NULL;
+        length++;
+        growthAmount++;
         score += 100;
         scoreboard.updateScore(score);
     }
@@ -153,6 +161,8 @@ class SnakeGame
     {
         delete poison;
         poison = NULL;
+        length--;
+        poisonAmount++;
         score += 50;
         scoreboard.updateScore(score);
     }
@@ -212,7 +222,12 @@ public:
         game_over = false;
         srand(time(NULL));
         snake.setDirection(down);
-
+        length = 4;
+        growthAmount = 0;
+        poisonAmount = 0;
+        missionLength = 10;
+        missionGrowth = 1;
+        missionPoison = 2;
         handleNextPiece(SnakePiece(1, 1));
         handleNextPiece(snake.nextHead());
         handleNextPiece(snake.nextHead());
@@ -358,6 +373,27 @@ public:
         }
         scoreboard.updateTime(elapsed++);
         scoreboard.updateSpeed(double(150) / doubleTimeout);
+        scoreboard.updateLength(length);
+        scoreboard.updateGrowth(growthAmount);
+        scoreboard.updatePoison(poisonAmount);
+
+        if(growthAmount >= missionGrowth){
+            scoreboard.updateMissionGrowth('v');
+        }else{
+            scoreboard.updateMissionGrowth(' ');
+        }
+
+        if(length >= missionLength){
+            scoreboard.updateMissionLength('v');
+        }else{
+            scoreboard.updateMissionLength(' ');
+        }
+
+        if(poisonAmount >= missionPoison){
+            scoreboard.updateMissionPoison('v');
+        }else{
+            scoreboard.updateMissionPoison(' ');
+        }
     }
 
     void redraw()
