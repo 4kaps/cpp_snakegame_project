@@ -1,7 +1,7 @@
 #pragma once
 #include <ncurses.h>
 #include "Drawable.hpp"
-#include <queue>
+#include <deque>
 
 enum Direction {
     up = -1, 
@@ -28,18 +28,22 @@ class Snake {
     Direction cur_direction;
 
 public:
-    std::queue<SnakePiece> prev_pieces;
+    std::deque<SnakePiece> prev_pieces;
 
     Snake() {
         cur_direction = down;
     }
 
-    void addPiece(SnakePiece piece) {
-        prev_pieces.push(piece);
+    void addPiece(SnakePiece piece) { // 
+        prev_pieces.push_back(piece);
     }
 
     void removePiece() {
-        prev_pieces.pop();
+        prev_pieces.pop_front();
+    }
+
+    void removeBackPiece() {
+        prev_pieces.pop_back();
     }
 
     SnakePiece tail() {
@@ -57,6 +61,27 @@ public:
     void setDirection(Direction d) {
         if (cur_direction + d != 0)
             cur_direction = d;
+    }
+
+    void clock() {
+        if (cur_direction == up)
+            cur_direction = right;
+        else if (cur_direction == right)
+            cur_direction = down;
+        else if (cur_direction == down)
+            cur_direction = left;
+        else
+            cur_direction = up;
+    }
+    void reverseClock() {
+        if (cur_direction == up)
+            cur_direction = left;
+        else if (cur_direction == left)
+            cur_direction = down;
+        else if (cur_direction == down)
+            cur_direction = right;
+        else
+            cur_direction = up;
     }
 
     SnakePiece nextHead() {
@@ -97,6 +122,4 @@ public:
         }
         return SnakePiece(y, x);
     }
-
-
 };
