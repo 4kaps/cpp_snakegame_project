@@ -320,7 +320,7 @@ public:
         handleNextPiece(snake.nextHead());
         time_t currentTime;
         time(&currentTime);
-
+        double doubleTimeout = double(board.timeout);
         if (growth != NULL && difftime(currentTime, growthTimer) >= 10) {
         deleteGrowth();
         }
@@ -351,6 +351,7 @@ public:
             game_over = true;
         }
         scoreboard.updateTime(elapsed++);
+        scoreboard.updateSpeed(double(150) / doubleTimeout);
     }
 
     void redraw()
