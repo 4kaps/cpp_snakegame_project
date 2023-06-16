@@ -300,7 +300,7 @@ public:
             }
         }
 
-        if(stage == 1){
+        if(stage == 2){
             for (int j = 10; j <= 25; j++)
             {
                 wall = new Wall(6, j);
@@ -311,7 +311,7 @@ public:
             createGate();
         }
 
-        if(stage == 2){
+        if(stage == 3){
             for (int j = 10; j <= 25; j++)
             {   
                 board.add(Empty(6, j));
@@ -345,7 +345,7 @@ public:
             createGate();
         }
 
-        if(stage == 3){
+        if(stage == 4){
             for (int i = 6; i <= 7; i++)
             {
                 board.add(Empty(i, i + 1));
