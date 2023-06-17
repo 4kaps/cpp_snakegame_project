@@ -49,7 +49,7 @@ public:
     }
 
     void getEmptyCoordinates(int &y, int &x) { // 윈도우의 랜덤한 장소 중 ' '인곳을 찾아서 y, x값을 전달한다.
-        while((mvwinch(board_win, y = rand() % height, x = rand() % width)) != ' ')
+        while((mvwinch(board_win, y = rand() % height, x = rand() % width)) != ' ') // Item 개발사항
             ;
     }
 
