@@ -275,9 +275,9 @@ public:
         length = 4;
         growthAmount = 0;
         poisonAmount = 0;
-        missionLength = 5;
+        missionLength = 6;
         missionGrowth = 1;
-        missionPoison = 0;
+        missionPoison = 1;
         mission1 = false;
         mission2 = false;
         mission3 = false;
