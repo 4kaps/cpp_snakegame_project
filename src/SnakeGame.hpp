@@ -229,7 +229,7 @@ class SnakeGame
         else if (stage == 3)
             size = 123;
         else
-            stage = 180;
+            size = 180;
         srand(static_cast<unsigned int>(time(0))); // 시간을 기반으로 srand()을 초기화
         gate1Choice = rand() % size;               // 0부터 105까지의 난수 생성
         do
@@ -275,9 +275,9 @@ public:
         length = 4;
         growthAmount = 0;
         poisonAmount = 0;
-        missionLength = 6;
+        missionLength = 5;
         missionGrowth = 1;
-        missionPoison = 1;
+        missionPoison = 0;
         mission1 = false;
         mission2 = false;
         mission3 = false;
