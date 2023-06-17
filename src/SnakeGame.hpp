@@ -231,7 +231,7 @@ class SnakeGame
         else
             size = 180;
         srand(static_cast<unsigned int>(time(0))); // 시간을 기반으로 srand()을 초기화
-        gate1Choice = rand() % size;               // 0부터 105까지의 난수 생성
+        gate1Choice = rand() % size;              
         do
         {
             gate2Choice = rand() % size;      // 두 번째 랜덤 숫자
