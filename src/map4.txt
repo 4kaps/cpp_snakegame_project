@@ -1,0 +1,37 @@
+if (stage == 4)
+        {
+            for (int i = 6; i <= 7; i++)
+            {
+                board.add(Empty(i, i + 1));
+                board.add(Empty(i, i + 2));
+            }
+
+            for (int i = 9; i <= 10; i++)
+            {
+                board.add(Empty(i, i + 16));
+                board.add(Empty(i, i + 17));
+            }
+
+            for (int i = 9; i <= 25; i++)
+            {
+                if ((i != 16) && (i != 17))
+                {
+                    board.add(Empty(8, i));
+                }
+            }
+
+            int a[10] = {4, 10, 4, 10, 4, 10, 7, 7, 7, 7};
+            int b[10] = {4, 4, 30, 30, 17, 17, 9, 12, 22, 25};
+
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = a[j]; i <= a[j] + 3; i++)
+                {
+                    wall = new Wall(i, b[j]);
+                    board.add(*wall);
+                    wall = new Wall(i, b[j] + 1);
+                    board.add(*wall);
+                }
+            }
+            createGate(stage);
+        }
