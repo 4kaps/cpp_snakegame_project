@@ -90,16 +90,16 @@ class SnakeGame
             if (next.getY() == g1->getY() && next.getX() == g1->getX())
             {
                 snake.addPiece(SnakePiece(g2->getY(), g2->getX()));
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.clock();
                 }
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.clock();
                     snake.clock();
                 }
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.reverseClock();
                 }
@@ -110,16 +110,16 @@ class SnakeGame
             else
             {
                 snake.addPiece(SnakePiece(g1->getY(), g1->getX()));
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.clock();
                 }
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.clock();
                     snake.clock();
                 }
-                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) != ' ')
+                if (board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'w' || board.getCharAt(snake.nextHead().getY(), snake.nextHead().getX()) == 'W')
                 {
                     snake.reverseClock();
                 }
