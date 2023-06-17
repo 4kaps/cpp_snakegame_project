@@ -70,6 +70,7 @@ class SnakeGame
                 board.add(Empty(emptyRow, emptyCol));
                 snake.removePiece();
                 break;
+            case 'G':
             case ' ':
                 emptyRow = snake.tail().getY();
                 emptyCol = snake.tail().getX();
@@ -78,12 +79,6 @@ class SnakeGame
                 break;
             case 'w':
                 game_over = true;
-                break;
-            case 'G': // G에 닿게 되면 (5, 5)로 나오게 구현한 상태
-                emptyRow = snake.tail().getY();
-                emptyCol = snake.tail().getX();
-                board.add(Empty(emptyRow, emptyCol));
-                snake.removePiece();
                 break;
             default:
                 game_over = true;
